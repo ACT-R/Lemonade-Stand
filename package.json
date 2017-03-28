@@ -2,12 +2,11 @@
   "name": "actr-block",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "postinstall": "bower install; typings install;"
   },
   "dependencies": {
     "babel-runtime": "6.18.0",
-    "blockly": "^1.0.0",
-    "meteor-node-stubs": "~0.2.0",
-    "split.js": "^1.2.0"
+    "meteor-node-stubs": "~0.2.0"
   }
 }

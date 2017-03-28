@@ -1,1 +1,10 @@
+# Meteor
 node_modules/
+.meteor/local/*
+npm-debug.log
+
+# Bower
+public/lib/
+
+# Lisp
+bin/
