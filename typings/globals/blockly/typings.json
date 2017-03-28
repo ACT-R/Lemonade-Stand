@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/trodi/blockly-d.ts/2882eef67b6a73efd7862f56d638e7198655b26e/dist/blockly-core.d.ts",
+    "raw": "github:trodi/blockly-d.ts/dist/blockly-core.d.ts#2882eef67b6a73efd7862f56d638e7198655b26e",
+    "typings": "https://raw.githubusercontent.com/trodi/blockly-d.ts/2882eef67b6a73efd7862f56d638e7198655b26e/dist/blockly-core.d.ts"
+  }
+}

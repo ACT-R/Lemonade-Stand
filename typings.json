@@ -1,0 +1,8 @@
+{
+  "name": "actr-block",
+  "dependencies": {},
+  "globalDependencies": {
+    "blockly": "github:trodi/blockly-d.ts/dist/blockly-core.d.ts#2882eef67b6a73efd7862f56d638e7198655b26e",
+    "meteor": "registry:dt/meteor#1.4.0+20170308162720"
+  }
+}

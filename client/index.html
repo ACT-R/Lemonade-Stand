@@ -1,0 +1,68 @@
+
+<head>
+  <title>ACT-R Lemonade Stand</title>
+
+  <!-- Import Blockly -->
+  <script type="text/javascript" src="lib/google-blockly/blockly_compressed.js"></script>
+  <script type="text/javascript" src="lib/google-blockly/blocks_compressed.js"></script>
+  <script type="text/javascript" src="lib/google-blockly/msg/js/en.js"></script>
+
+  <!-- Import LISP Editor -->
+</head>
+
+<body>
+
+  <div class="panel-container">
+    <div class="resizable-horiz panel-left">
+      <ul>
+        <li style="padding-top:6px; margin:0 10px;"> ACT-R Lemonade Stand </li>
+        <li><a href="#block_editor">Block Editor</a></li>
+        <li><a href="#code_editor">Code Editor</a></li>
+        <li><a href="#getting_started">Getting Started</a></li>
+      </ul>
+
+      <div id="block_editor">
+        {{> actr_blockly}}
+        {{> blockly}}
+      </div>
+
+      <div id="code_editor">
+
+      </div>
+
+      <div id="getting_started">
+
+      </div>
+
+    </div>
+    <div class="resizable-horiz panel-right">
+      <div class="panel-top">
+
+      </div>
+
+      <div class="panel-bottom">
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+
+</body>
+
+<template name="blockly">
+  <div id="blockly_div"></div>
+  <div id="blockly_area"></div>
+</template>
+
+<template name="actr_blockly">
+  <xml id="toolbox" style="display: none">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="controls_repeat_ext"></block>
+    <block type="math_number"></block>
+    <block type="math_arithmetic"></block>
+    <block type="text"></block>
+    <block type="text_print"></block>
+  </xml>
+</template>
