@@ -7,14 +7,16 @@
   <script type="text/javascript" src="lib/google-blockly/blocks_compressed.js"></script>
   <script type="text/javascript" src="lib/google-blockly/msg/js/en.js"></script>
 
-  <!-- Import LISP Editor -->
+  <!-- Import ACE Editor -->
+  <script type="text/javascript" src="lib/ace-builds/src-min/ace.js"></script>
+
 </head>
 
 <body>
 
   <div class="panel-container">
     <div class="resizable-horiz panel-left">
-      <ul>
+      <ul class="tabs">
         <li style="padding-top:6px; margin:0 10px;"> ACT-R Lemonade Stand </li>
         <li><a href="#block_editor">Block Editor</a></li>
         <li><a href="#code_editor">Code Editor</a></li>
@@ -27,7 +29,7 @@
       </div>
 
       <div id="code_editor">
-
+        {{> ace}}
       </div>
 
       <div id="getting_started">
@@ -50,6 +52,7 @@
 
 </body>
 
+<!-- BLOCKLY -->
 <template name="blockly">
   <div id="blockly_div"></div>
   <div id="blockly_area"></div>
@@ -65,4 +68,35 @@
     <block type="text"></block>
     <block type="text_print"></block>
   </xml>
+</template>
+
+<!-- ACE -->
+<template name="ace">
+  <div id="ace_editor">
+    (defparameter *small* 1)
+    (defparameter *big* 100)
+
+    (defun guess-my-number ()
+         (ash (+ *small* *big*) -1))
+
+    (defun smaller ()
+         (setf *big* (1- (guess-my-number)))
+         (guess-my-number))
+
+    (defun bigger ()
+         (setf *small* (1+ (guess-my-number)))
+         (guess-my-number))
+
+    (defun start-over ()
+       (defparameter *small* 1)
+       (defparameter *big* 100)
+       (guess-my-number))
+  </div>
+</template>
+
+<!-- LISP_OUTPUT -->
+<template name="lisp_output">
+  {{#each output}}
+    {{data}}
+  {{/each}}
 </template>

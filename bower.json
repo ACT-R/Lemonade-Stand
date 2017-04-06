@@ -14,5 +14,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "google-blockly": "*",
+    "ace-builds": "^1.2.6"
+  }
 }

@@ -14,7 +14,6 @@ html, body{
   font-size:0;
 
   .resizable-horiz {
-      width: 49.5%;
       height: 100vh;
       display: inline-block;
 
@@ -23,10 +22,12 @@ html, body{
       }
 
       &.panel-left{
+        width: 60%;
         font-size: 8pt;
       }
 
       &.panel-right{
+        width: 39%;
         .panel-top, .panel-bottom{
           height: 50vh;
         }
@@ -56,4 +57,16 @@ html, body{
 
 #blockly_div{
   position: absolute;
+}
+
+/* ACE_EDITOR */
+#ace_editor{
+   position: absolute;
+   top: 30px;;
+   left: 0;
+   right: 0;
+   bottom: 0;
+
+   width: 100%;
+   height: 100%;
 }

@@ -10,6 +10,9 @@ $(document).ready(function(){
 
   // Create Tab Structure
   $(".panel-left").tabs();
+  $(".panel-left tabs").mouseup(function(){
+    window.dispatchEvent(new Event('resize'));
+  });
 
   // Create Draggable Left/Right Elements
   $(".panel-left").resizable({
@@ -78,3 +81,24 @@ Template.blockly.onRendered(function() {
   Blockly.svgResize(workspace);
 
 });
+
+/**
+ ** CODE EDITOR
+ **/
+Template.ace.onRendered(function(){
+  var editor = ace.edit("ace_editor");
+  editor.getSession().setMode("ace/mode/lisp");
+  editor.setReadOnly(true);
+})
+
+/**
+ **  ACT-R COMMAND LINE
+ **/
+ lisp_output = new Meteor.Collection('lisp_output');
+ Meteor.subscribe("lisp_output");
+
+ Template.lisp_output.helpers({
+   output() {
+     return lisp_output.find();
+   }
+ });

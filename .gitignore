@@ -7,4 +7,4 @@ npm-debug.log
 public/lib/
 
 # Lisp
-bin/
+private/bin/
