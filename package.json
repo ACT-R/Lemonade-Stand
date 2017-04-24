@@ -3,9 +3,10 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
+    "play": "node -i -e \"require('./both/game.js').playInteractive();\"",
     "preinstall": "npm run preinstall-ccl && npm run preinstall-actr",
-    "preinstall-ccl" : "mkdir -p private/bin && wget -qO- ftp://ftp.clozure.com/pub/release/1.11/ccl-1.11-linuxx86.tar.gz | tar xzf - -C private/bin/;",
-    "preinstall-actr" : "wget -qO- -O private/bin/actr.zip http://act-r.psy.cmu.edu/wordpress/wp-content/themes/ACT-R/actr7/actr7.zip && unzip private/bin/actr.zip -d private/bin",
+    "preinstall-ccl": "mkdir -p private/bin && wget -qO- ftp://ftp.clozure.com/pub/release/1.11/ccl-1.11-linuxx86.tar.gz | tar xzf - -C private/bin/;",
+    "preinstall-actr": "wget -qO- -O private/bin/actr.zip http://act-r.psy.cmu.edu/wordpress/wp-content/themes/ACT-R/actr7/actr7.zip && unzip private/bin/actr.zip -d private/bin",
     "postinstall": "bower install;"
   },
   "repository": {
@@ -16,5 +17,9 @@
     "babel-runtime": "6.18.0",
     "meteor-node-stubs": "~0.2.0",
     "node-pty": "^0.6.3"
+  },
+  "devDependencies": {
+    "co-prompt": "^1.0.0",
+    "inquirer": "^3.0.6"
   }
 }
