@@ -1,6 +1,7 @@
 
 // Meteor Imports
 import { Template } from 'meteor/templating';
+import { Session } from 'meteor/session';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 /**
@@ -89,16 +90,46 @@ Template.ace.onRendered(function(){
   var editor = ace.edit("ace_editor");
   editor.getSession().setMode("ace/mode/lisp");
   editor.setReadOnly(true);
-})
+});
 
 /**
  **  ACT-R COMMAND LINE
  **/
- lisp_output = new Meteor.Collection('lisp_output');
- Meteor.subscribe("lisp_output");
 
+ // Terminal ID
+ // Lisp Output Collection
+ lisp_output = new Meteor.Collection('lisp_output');
+
+ // Output Command Line
  Template.lisp_output.helpers({
-   output() {
-     return lisp_output.find();
+   isActive() {
+     return Session.get("terminal_id") != null;
+   },
+   getLines() {
+      return lisp_output.find( { terminal_id: Session.get('terminal_id') });
+   },
+   formatLine(data) {
+     if(data != null)
+        return new Spacebars.SafeString(data.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+     else {
+        return new Spacebars.SafeString("");
+     }
    }
  });
+
+/**
+**  MAIN PLAY FUNCTION
+**/
+runModel = function(){
+   Meteor.call('execute_model',[], function(err, res){
+     if(err || !res){
+       console.log(res);
+       console.error("Couldn't submit model to server for execution.");
+     } else {
+       Session.set("terminal_id",res);
+       Tracker.autorun(() => {
+         Meteor.subscribe('lisp_output', { terminal_id: Session.get('terminal_id') });
+      });
+     }
+   });
+ }

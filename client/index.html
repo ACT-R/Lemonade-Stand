@@ -10,6 +10,9 @@
   <!-- Import ACE Editor -->
   <script type="text/javascript" src="lib/ace-builds/src-min/ace.js"></script>
 
+  <!-- Import XTerm Styles -->
+  <link href="lib/xterm/index.css" rel="stylesheet" type="text/css" />
+
 </head>
 
 <body>
@@ -42,8 +45,8 @@
 
       </div>
 
-      <div class="panel-bottom">
-
+      <div class="terminal panel-bottom">
+        {{> lisp_output}}
       </div>
     </div>
   </div>
@@ -96,7 +99,13 @@
 
 <!-- LISP_OUTPUT -->
 <template name="lisp_output">
-  {{#each output}}
-    {{data}}
-  {{/each}}
+  {{#if isActive}}
+    {{#each getLines}}
+      {{formatLine data}}
+    {{/each}}
+  {{else}}
+    <div>
+      Play model to see output...
+    </div>
+  {{/if}}
 </template>

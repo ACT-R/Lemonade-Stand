@@ -6,13 +6,10 @@
   var pty = require('node-pty');
 
   /* Create Database of Log Output */
-  lisp_output = new Meteor.Collection('lisp_output', {connection: null});
+  lisp_output = new Meteor.Collection('lisp_output');
 
   /* Terminal Creation */
   execute_model = function(code, col = 80, row = 24){
-
-    // Delete All in Collection
-    lisp_output.remove({});
 
     // Verify Terminal Size
     if (col > 180)
@@ -23,6 +20,9 @@
       row = 100;
     if (row < 24)
       row = 24;
+
+    // Create Terminal Record
+    terninal_id = lisp_output.insert({"message" : "NEW_TERMINAL"});
 
     // Create PTY
     command = "./private/bin/ccl/lx86cl64";
@@ -38,7 +38,7 @@
 
     // Forward Data to Log
     term.on('data', Meteor.bindEnvironment(function(data){
-        lisp_output.insert({"data" : data.toString()});
+        lisp_output.insert({"data" : data.toString(), "terminal_id" : terninal_id});
     }));
 
     // Pipe Data into Command
@@ -47,16 +47,18 @@
         term.write(line);
       } else {
         Meteor.Error("Cannot write to shell.");
+        lisp_output.insert({"message" : "TERMINAL_ERROR", "terminal_id" : terninal_id});
         break;
       }
     }
 
     // Wait for 15s Timeout and Close
     Meteor.setTimeout(function(){
+      lisp_output.insert({"message" : "MODEL_TIMEOUT", "terminal_id" : terninal_id});
       term.kill();
     }, 15000);
 
-    return;
+    return terninal_id;
   }
 
   // Meteor Methods
