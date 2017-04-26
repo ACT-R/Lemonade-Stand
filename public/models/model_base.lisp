@@ -25,8 +25,7 @@
 
       ;; Construct Goal Buffer Contents
       (let ((purchase `(
-          isa game-purchase
-          score nil
+          state purchase
           weather_temperature ,(nth 0 weather)
           weather_condition ,(nth 1 weather)
           inventory_lemons ,(nth 0 inventory)
@@ -38,7 +37,7 @@
         ;; Insert into Goal Buffer
         (if (buffer-read 'goal)
            (mod-focus-fct purchase)
-           (goal-focus-fct (car (define-chunks-fct `(,purchase))))
+           (goal-focus-fct (car (define-chunks-fct `(,(append '(isa game-state) purchase)))))
         )
       )
 
@@ -51,12 +50,40 @@
     )
 )
 
+(defun learn-stage (score)
+  (let ((window (open-exp-window "Purchase Phase" :visible nil)))
+
+    (install-device window)
+
+    ;; Construct Goal Buffer Contents
+    (let ((learn `(
+        state learn
+        score ,score
+      )))
+
+      (if (buffer-read 'goal)
+         (mod-focus-fct learn)
+         (goal-focus-fct (car (define-chunks-fct `(,(append '(isa game-state) learn)))))
+      )
+    )
+
+    ;; Run Model
+    (run-full-time 10)
+
+  )
+)
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;     BASIC MODEL     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-model lemonade
+
+  ;;
+  ;; SET PARAMETERS
+  ;;
+  (sgp :v nil)
 
   ;;
   ;; GOAL BUFFER DEFINITION
