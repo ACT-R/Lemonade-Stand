@@ -4,12 +4,13 @@
  **/
 
   var pty = require('node-pty');
+  var LemonadeGame = require('./game.js').game;
 
   /* Create Database of Log Output */
   lisp_output = new Meteor.Collection('lisp_output');
 
   /* Terminal Creation */
-  execute_model = function(code, col = 80, row = 24){
+  play_game = function(model, iterations = 100, col = 80, row = 24){
 
     // Verify Terminal Size
     if (col > 180)
@@ -36,12 +37,12 @@
       env: process.env
     });
 
-    // Forward Data to Log
+    // Command Output Function
     term.on('data', Meteor.bindEnvironment(function(data){
         lisp_output.insert({"data" : data.toString(), "terminal_id" : terninal_id});
     }));
 
-    // Pipe Data into Command
+    // Load Model
     for (line of code) {
       if(term.writable){
         term.write(line);
@@ -51,6 +52,47 @@
         break;
       }
     }
+
+    // Setup Game
+    var game = new LemonadeGame();
+    var i = 0;
+
+    var play_game = function(play){
+      if(i < iterations){
+
+        // Validate
+        if(play != null)
+          game.nextDay(play);
+
+        // Show Score and Run Model
+        term.write(`(learn-stage ${game.getScore()})
+                    (purchase-stage
+                        '(${game.getWeather().getTemp()} ${game.getWeather.getCond()})
+                        '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups})
+                     )`);
+
+      }
+    }
+
+    // Run Game
+    term.on('data', Meteor.bindEnvironment(function(data){
+
+      // Validate Command String
+      if((parse = data.match(/(\d), (\d), (\d), (\d)/gi)) != null) &&
+         (moves = parse.splice(0, 1).length == 4){
+
+        for(var i = 0; i < 4; i++){
+          if((moves[i] = parseInt(moves[i])) > 1 || moves[i] < 0){
+            throw "Move must be either 0 or 1";
+          } else {
+            moves[i] = !!moves[i];
+          }
+        }
+
+        play_game(moves);
+      }
+    }));
+    play_game(null);
 
     // Wait for 15s Timeout and Close
     Meteor.setTimeout(function(){
@@ -63,5 +105,5 @@
 
   // Meteor Methods
   Meteor.methods({
-    'execute_model': execute_model
+    'play_game': play_game
   })

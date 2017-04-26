@@ -238,28 +238,11 @@ class GameState{
     this.cups_sold.push(cups_sold);
   }
 
-  nextDay(move){
-
-    // Check for null String
-    if(move == null){
-      throw "Move cannot be null"
-    }
-
-    // Split String
-    var moves = move.split(" ");
+  nextDay(moves){
 
     // Check Moves Length
     if(moves.length != 4){
-      throw "Move string must be of length 4";
-    }
-
-    // Convert Array to Boolean
-    for(var i = 0; i < 4; i++){
-      if((moves[i] = parseInt(moves[i])) > 1 || moves[i] < 0){
-        throw "Move must be either 0 or 1";
-      } else {
-        moves[i] = !!moves[i];
-      }
+      throw "Moves must be of length 4";
     }
 
     // Update Weather Forecast
@@ -351,11 +334,11 @@ playInteractive = function(){
       // Convert to Play String
       var p = answers.purchases;
       var play = [
-        p.includes('l') ? "1" : "0",
-        p.includes('s') ? "1" : "0",
-        p.includes('i') ? "1" : "0",
-        p.includes('c') ? "1" : "0"
-      ].join(" ");
+        p.includes('l'),
+        p.includes('s'),
+        p.includes('i'),
+        p.includes('c')
+      ];
 
       // Go to Next Day
       game.nextDay(play);
@@ -370,5 +353,6 @@ playInteractive = function(){
 }
 
 module.exports = {
-  play : playInteractive
+  play : playInteractive,
+  game: GameState
 }
