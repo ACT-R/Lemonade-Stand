@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "play": "node -i -e \"require('./both/game.js').playInteractive();\"",
+    "play": "node -i -e \"require('./server/game.js').play();\"",
     "preinstall": "npm run preinstall-ccl && npm run preinstall-actr",
     "preinstall-ccl": "mkdir -p private/bin && wget -qO- ftp://ftp.clozure.com/pub/release/1.11/ccl-1.11-linuxx86.tar.gz | tar xzf - -C private/bin/;",
     "preinstall-actr": "wget -qO- -O private/bin/actr.zip http://act-r.psy.cmu.edu/wordpress/wp-content/themes/ACT-R/actr7/actr7.zip && unzip private/bin/actr.zip -d private/bin",

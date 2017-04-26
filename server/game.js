@@ -97,7 +97,7 @@ class WeatherReport{
 /* INVENTORY */
 recipe_ratio = [0.4, 0.2, 3.0, 1.0];
 purchase_quantity = [100, 50, 1000, 200];
-purchase_cost = [10, 10, 10, 10];
+purchase_cost = [20, 20, 10, 30];
 game_events = {
   ICE_MELT : 1,
   LEMON_SPOIL : 2,
