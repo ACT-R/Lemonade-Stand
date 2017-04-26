@@ -56,6 +56,7 @@
     // Setup Game
     var game = new LemonadeGame();
     var i = 0;
+    var timeout_id = null;
 
     var play_game = function(play){
       if(i < iterations){
@@ -71,6 +72,14 @@
                         '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups})
                      )`);
 
+        // Set Timeout to catch Model Timeout
+        timeout_id = Meteor.setTimeout(function(){
+              lisp_output.insert({"message" : "MODEL_TIMEOUT", "terminal_id" : terninal_id});
+              term.kill();
+        }, 15000);
+
+        // Increment Day Counter
+        i++;
       }
     }
 
@@ -81,6 +90,7 @@
       if((parse = data.match(/(\d), (\d), (\d), (\d)/gi)) != null) &&
          (moves = parse.splice(0, 1).length == 4){
 
+        // Iterate over and validate responses from model
         for(var i = 0; i < 4; i++){
           if((moves[i] = parseInt(moves[i])) > 1 || moves[i] < 0){
             throw "Move must be either 0 or 1";
@@ -89,16 +99,17 @@
           }
         }
 
+        // Cancel Timeout Checker
+        if(timeout_id != null){
+          Meteor.clearTimeout(timeout_id);
+          timeout_id = null;
+        }
+
+        // Pass to Game Loop
         play_game(moves);
       }
     }));
     play_game(null);
-
-    // Wait for 15s Timeout and Close
-    Meteor.setTimeout(function(){
-      lisp_output.insert({"message" : "MODEL_TIMEOUT", "terminal_id" : terninal_id});
-      term.kill();
-    }, 15000);
 
     return terninal_id;
   }
