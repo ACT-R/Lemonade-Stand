@@ -100,6 +100,7 @@ Template.ace.onRendered(function(){
  // Terminal ID
  // Lisp Output Collection
  lisp_output = new Meteor.Collection('lisp_output');
+ data_output = new Meteor.Collection('data_output');
 
  // Output Command Line
  Template.lisp_output.helpers({
@@ -121,19 +122,52 @@ Template.ace.onRendered(function(){
 /**
 **  Run Model Function
 **/
-runModel = function(){
+runModel = function(iterations = 100){
    Meteor.call('play_game',[editor.getValue()], function(err, res){
      if(err || !res){
        console.log(res);
        console.error("Couldn't submit model to server for execution.");
      } else {
+       // Wait for Results and Graph
 
-       // Set terminal_id for Live Results
+       // Set terminal_id
        Session.set("terminal_id",res);
+
+       // Set Subscriptions
        Tracker.autorun(() => {
          Meteor.subscribe('lisp_output', { terminal_id: Session.get('terminal_id') });
+         Meteor.subscribe('data_output', { terminal_id: Session.get('terminal_id') });
       });
 
+      // Observe Changes to Data Output to Create Graph
+      data_output.find({ 'terminal_id' : Session.get('terminal_id')}).observe({
+        added : function(document){
+
+          // Generate Labels
+          var labels = [];
+          for(var i = 0; i < document.data.length; i++){
+            labels[i] = i;
+          }
+
+          // Create Chart
+          chart = new Chartist.Line('.ct-chart', {
+            labels: labels,
+            series: [document.data]
+          }, {
+            fullWidth: true,
+            showPoint: false,
+            chartPadding: {
+              right: 40
+            },
+            axisX: {
+              labelInterpolationFnc: function(value, index) {
+                return index % (Math.ceil(iterations / 10)) === 0 ? value : null;
+              }
+            }
+          });
+
+        }
+      });
      }
    });
  }

@@ -11,8 +11,9 @@
   // Import Lemonade Game
   var LemonadeGame = require('./game.js').game;
 
-  /* Create Database of Log Output */
+  /* Create Databases */
   lisp_output = new Meteor.Collection('lisp_output');
+  data_output = new Meteor.Collection('data_output');
 
   /**
    **  runModel
@@ -20,7 +21,7 @@
    **/
   var runModel = function(model, iterations = 100){
     // Create Terminal Record
-    terninal_id = lisp_output.insert({"message" : "MODEL_NEW"});
+     terminal_id = lisp_output.insert({"message" : "MODEL_NEW"});
 
     // Create Model File
     tmp.file({ postfix : ".lisp", detachDescriptor : true, keep : true }, Meteor.bindEnvironment(function(err, path_model, fd, cleanup) {
@@ -91,7 +92,7 @@
 
                             MOVE: ${data}
                             `;
-                            lisp_output.insert({"data" : move_string, "terminal_id" : terninal_id});
+                            lisp_output.insert({"data" : move_string, "terminal_id" :  terminal_id});
 
                             // Update Game State
                             game.nextDay(moves);
@@ -102,12 +103,17 @@
           // Close ACT-R
           term.sendline("(quit)")
               .run(Meteor.bindEnvironment(function(err, output, exit){
+
+                // Return Model Message
                 if (!err) {
-                  lisp_output.insert({"message" : "MODEL_SUCCESS", "terminal_id" : terninal_id});
+                  lisp_output.insert({"message" : "MODEL_SUCCESS", "terminal_id" :  terminal_id});
                 }
                 else {
-                  lisp_output.insert({"message" : "MODEL_FAILURE", "terminal_id" : terninal_id});
+                  lisp_output.insert({"message" : "MODEL_FAILURE", "terminal_id" :  terminal_id});
                 }
+
+                // Return Model Data
+                data_output.insert({"data" : game.getScoreSeries(), "terminal_id" : terminal_id});
 
                 // Cleanup TMP File
                 cleanup();
@@ -117,7 +123,7 @@
       }));
     }));
 
-    return terninal_id;
+    return  terminal_id;
   }
 
   // Meteor Methods

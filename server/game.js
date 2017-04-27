@@ -222,6 +222,10 @@ class GameState{
     return this.score[this.score.length - 1];
   }
 
+  getScoreSeries(){
+    return this.score;
+  }
+
   getCupsSold(){
     return this.cups_sold[this.cups_sold.length - 1];
   }
