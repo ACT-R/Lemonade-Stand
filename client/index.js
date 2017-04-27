@@ -43,12 +43,13 @@ $(document).ready(function(){
 /**
  **  BLOCKLY
  **/
+workspace = null;
 Template.blockly.onRendered(function() {
   var blocklyArea = document.getElementById('blockly_area');
   var blocklyDiv = document.getElementById('blockly_div');
 
   // Create Workspace
-  var workspace = Blockly.inject(blocklyDiv,
+  workspace = Blockly.inject(blocklyDiv,
       {
         media: 'lib/google-blockly/media/',
         toolbox: document.getElementById('toolbox'),
@@ -75,7 +76,7 @@ Template.blockly.onRendered(function() {
 
     // Regenerate the Code
     var code = "";
-    blocks = workspace.getTopBlocks(true);
+    var blocks = workspace.getTopBlocks(true);
     for(var i = 0; i < blocks.length; i++){
       code += Blockly.JavaScript.blockToCode(blocks[i]);
     }
@@ -149,22 +150,40 @@ Template.ace.onRendered(function(){
  });
 
 /**
+ **  Load Model Dropdown
+ **/
+ loadModel = function(url){
+   var r = confirm("WARNING!\nThis will discard any work you have in progress.  Do you really wish to load a new model?");
+   if(r){
+     $.get(url, function(data){
+       workspace.clear();
+       var xml = Blockly.Xml.textToDom(data);
+       Blockly.Xml.domToWorkspace(workspace, xml);
+     },"text");
+   }
+ }
+ $(document).ready(function(){
+   $(".tabs .load #load_model").change(function(){
+     loadModel(this.value);
+   })
+ })
+
+/**
  **  Save Model Function
  **/
  saveModel = function(){
-   var content = editor.getValue();
+   var xml = Blockly.Xml.workspaceToDom(workspace);
+   var content = Blockly.Xml.domToText(xml)
    uriContent = "data:application/octet-stream," + encodeURIComponent(content);
-   newWindow = window.open(uriContent, 'lemonade_model.lisp');
-
+   newWindow = window.open(uriContent, 'lemonade_model.xml');
  }
 
 /**
 **  Run Model Function
 **/
 runModel = function(iterations = 100){
-  console.log("Running Model!");
 
-   Meteor.call('play_game',[editor.getValue()], function(err, res){
+   Meteor.call('play_game',{model : editor.getValue(), iterations: iterations}, function(err, res){
      if(err || !res){
        console.log(res);
        console.error("Couldn't submit model to server for execution.");

@@ -21,9 +21,13 @@ html, body{
         li.right{
           float:right !important;
 
-          a span.ui-icon{
+          a span.ui-icon, div span.ui-icon{
             background-image: url(packages/mizzao_jquery-ui/images/ui-icons_454545_256x240.png) !important;
 
+          }
+
+          &.load{
+            background:#f1c40f !important;
           }
 
           &.play{

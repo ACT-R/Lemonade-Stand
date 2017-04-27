@@ -19,7 +19,11 @@
    **  runModel
    **
    **/
-  var runModel = function(model, iterations = 100){
+  var runModel = function(obj){
+    // Parse Obj
+    model = obj.model;
+    iterations = (obj.iterations != null) ? obj.iterations : 100;
+
     // Create Terminal Record
      terminal_id = lisp_output.insert({"message" : "MODEL_NEW"});
 
@@ -82,7 +86,7 @@
                             for(var i = 0; i < 4; i++){
                                 moves[i] = parse[i + 1] == 1;
                             }
-                            
+
                             // Return Results of Model
                             var move_string = `
                             == DAY ${game.getDay()} ==

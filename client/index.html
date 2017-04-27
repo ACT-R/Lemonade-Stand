@@ -1,6 +1,5 @@
 
 <head>
-  <title>ACT-R Lemonade Stand</title>
 
   <!-- Import Blockly -->
   <script type="text/javascript" src="lib/google-blockly/blockly_compressed.js"></script>
@@ -13,6 +12,10 @@
 
   <!-- Import XTerm Styles -->
   <link href="lib/xterm/index.css" rel="stylesheet" type="text/css" />
+
+  <!-- Meta -->
+  <title>ACT-R Lemonade Stand</title>
+  <link rel="icon" sizes="16x16 32x32 48x48" href="/img/favicon.ico">
 
 </head>
 
@@ -27,6 +30,19 @@
         <li><a href="#getting_started">Getting Started</a></li>
         <li class="right play"><a href="#block_editor" id="play" onclick="runModel()"><span class="ui-icon ui-icon-play"></span></a></li>
         <li class="right save"><a href="#block_editor" id="save" onclick="saveModel()"><span class="ui-icon ui-icon-disk"></span></a></li>
+        <li class="right load ui-state-default ui-corner-top">
+          <div class="ui-tabs-anchor">
+            <span class="ui-icon ui-icon-folder-open" style="float:left; margin-right: 6px;"></span>
+            <select name="load_model" id="load_model">
+              <option value="models/blank.xml" selected="selected">Blank</option>
+              <option value="models/blank.xml">Unit 1</option>
+              <option value="models/blank.xml">Unit 2</option>
+              <option value="models/blank.xml">Unit 3</option>
+              <option value="models/blank.xml">Unit 4</option>
+              <option value="models/blank.xml">Unit 5</option>
+            </select>
+          </div>
+        </li>
       </ul>
 
       <div id="block_editor">
