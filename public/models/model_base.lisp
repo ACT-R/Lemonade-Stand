@@ -69,7 +69,7 @@
 
     ;; Run Model
     (run-full-time 10)
-
+    (values)
   )
 )
 

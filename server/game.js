@@ -206,6 +206,10 @@ class GameState{
            "Score: \n" + "$" + this.getScore().toString() + "\n";
   }
 
+  getDay(){
+    return this.inventory.length;
+  }
+
   getInventory(){
     return this.inventory[this.inventory.length - 1];
   }

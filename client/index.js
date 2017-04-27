@@ -86,8 +86,9 @@ Template.blockly.onRendered(function() {
 /**
  ** CODE EDITOR
  **/
+editor = null;
 Template.ace.onRendered(function(){
-  var editor = ace.edit("ace_editor");
+  editor = ace.edit("ace_editor");
   editor.getSession().setMode("ace/mode/lisp");
   editor.setReadOnly(true);
 });
@@ -118,18 +119,21 @@ Template.ace.onRendered(function(){
  });
 
 /**
-**  MAIN PLAY FUNCTION
+**  Run Model Function
 **/
 runModel = function(){
-   Meteor.call('execute_model',[], function(err, res){
+   Meteor.call('play_game',[editor.getValue()], function(err, res){
      if(err || !res){
        console.log(res);
        console.error("Couldn't submit model to server for execution.");
      } else {
+
+       // Set terminal_id for Live Results
        Session.set("terminal_id",res);
        Tracker.autorun(() => {
          Meteor.subscribe('lisp_output', { terminal_id: Session.get('terminal_id') });
       });
+
      }
    });
  }
