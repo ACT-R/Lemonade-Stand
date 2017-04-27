@@ -17,6 +17,25 @@ html, body{
       height: 100vh;
       display: inline-block;
 
+      .tabs{
+        li.right{
+          float:right !important;
+
+          a span.ui-icon{
+            background-image: url(packages/mizzao_jquery-ui/images/ui-icons_454545_256x240.png) !important;
+
+          }
+
+          &.play{
+            background:#2ecc71 !important;
+          }
+
+          &.save{
+            background:#3498db !important;
+          }
+        }
+      }
+
       &.panel-left, &.panel-right{
         overflow: hidden;
       }

@@ -149,9 +149,21 @@ Template.ace.onRendered(function(){
  });
 
 /**
+ **  Save Model Function
+ **/
+ saveModel = function(){
+   var content = editor.getValue();
+   uriContent = "data:application/octet-stream," + encodeURIComponent(content);
+   newWindow = window.open(uriContent, 'lemonade_model.lisp');
+
+ }
+
+/**
 **  Run Model Function
 **/
 runModel = function(iterations = 100){
+  console.log("Running Model!");
+
    Meteor.call('play_game',[editor.getValue()], function(err, res){
      if(err || !res){
        console.log(res);
