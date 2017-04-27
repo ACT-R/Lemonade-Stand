@@ -80,9 +80,9 @@
                           re = /"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig;
                           if((parse = re.exec(data)) != null){
                             for(var i = 0; i < 4; i++){
-                                moves[i] = parse[i] == 1;
+                                moves[i] = parse[i + 1] == 1;
                             }
-
+                            
                             // Return Results of Model
                             var move_string = `
                             == DAY ${game.getDay()} ==

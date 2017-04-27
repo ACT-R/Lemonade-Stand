@@ -4,8 +4,9 @@
 
   <!-- Import Blockly -->
   <script type="text/javascript" src="lib/google-blockly/blockly_compressed.js"></script>
-  <script type="text/javascript" src="lib/google-blockly/blocks_compressed.js"></script>
   <script type="text/javascript" src="lib/google-blockly/msg/js/en.js"></script>
+  <script type="text/javascript" src="lib/google-blockly/javascript_compressed.js"></script>
+  <script type="text/javascript" src="blockly/act-r.js"></script>
 
   <!-- Import ACE Editor -->
   <script type="text/javascript" src="lib/ace-builds/src-min/ace.js"></script>
@@ -64,13 +65,12 @@
 
 <template name="actr_blockly">
   <xml id="toolbox" style="display: none">
-    <block type="controls_if"></block>
-    <block type="logic_compare"></block>
-    <block type="controls_repeat_ext"></block>
-    <block type="math_number"></block>
-    <block type="math_arithmetic"></block>
-    <block type="text"></block>
-    <block type="text_print"></block>
+    <block type="production"></block>
+    <block type="production_component"></block>
+    <block type="production_slot"></block>
+    <block type="symbol"></block>
+    <block type="variable"></block>
+
   </xml>
 </template>
 
@@ -82,6 +82,7 @@
   ;;      YOUR MODEL     ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
+  ;;BEGIN-MODEL
   (define-model lemonade
 
     ;;
@@ -117,7 +118,7 @@
     (declare-buffer-usage goal game-state :all)
 
     ;; Example Key Press
-    (p test-keypress
+    (p test-keypress-l
      =goal>
        isa game-purchase
        state purchase
@@ -125,13 +126,56 @@
        state free
     ==>
      =goal>
-       state nil
+       state purchase-l
      +manual>
        cmd press-key
        key "l"
       )
 
+      (p test-keypress-s
+       =goal>
+         isa game-purchase
+         state purchase-l
+       ?manual>
+         state free
+      ==>
+       =goal>
+         state purchase-s
+       +manual>
+         cmd press-key
+         key "s"
+        )
+
+      (p test-keypress-i
+       =goal>
+         isa game-purchase
+         state purchase-s
+       ?manual>
+         state free
+      ==>
+       =goal>
+         state purchase-i
+       +manual>
+         cmd press-key
+         key "i"
+        )
+
+        (p test-keypress-c
+         =goal>
+           isa game-purchase
+           state purchase-i
+         ?manual>
+           state free
+        ==>
+         =goal>
+           state nil
+         +manual>
+           cmd press-key
+           key "c"
+          )
+
   )
+  ;;END-MODEL
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;   PURCHASE FUNCTION   ;;

@@ -47,19 +47,48 @@ Template.blockly.onRendered(function() {
   var blocklyArea = document.getElementById('blockly_area');
   var blocklyDiv = document.getElementById('blockly_div');
 
+  // Create Workspace
   var workspace = Blockly.inject(blocklyDiv,
       {
         media: 'lib/google-blockly/media/',
         toolbox: document.getElementById('toolbox'),
-        zoom:
-          {controls: false,
-           wheel: true,
+        trashcan: true,
+        grid: {
+          spacing: 20,
+          length: 3,
+          colour: '#ccc',
+          snap: true
+        },
+        zoom: {
+           controls: true,
+           wheel: false,
            startScale: 1.0,
-           maxScale: 3,
-           minScale: 0.3,
-           scaleSpeed: 1.2},
+           maxScale: 2,
+           minScale: 0.8,
+           scaleSpeed: 1.2
+        },
       }
   );
+
+  // Listen for Workspace Changes, and Write Code to Codebox
+  var onModify = function(event){
+
+    // Regenerate the Code
+    var code = "";
+    blocks = workspace.getTopBlocks(true);
+    for(var i = 0; i < blocks.length; i++){
+      code += Blockly.JavaScript.blockToCode(blocks[i]);
+    }
+
+    // Place Inside Tags
+    old_code = editor.getValue();
+    editor.setValue(old_code.replace(/;;BEGIN-MODEL[\s\S]*?;;END-MODEL/g,
+    ";;BEGIN-MODEL\n" + code + "\n  ;;END-MODEL"));
+
+
+  }
+  workspace.addChangeListener(onModify);
+
 
   var blockly_resize = function(e) {
     // Compute the absolute coordinates and dimensions of blocklyArea.
@@ -75,7 +104,7 @@ Template.blockly.onRendered(function() {
     blocklyDiv.style.left = x + 'px';
     blocklyDiv.style.top = y + 'px';
     blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
-    blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+    blocklyDiv.style.height = blocklyArea.offsetHeight - 50 + 'px';
   };
   window.addEventListener('resize', blockly_resize, false);
   blockly_resize();
