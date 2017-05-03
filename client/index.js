@@ -181,7 +181,7 @@ Template.ace.onRendered(function(){
 /**
 **  Run Model Function
 **/
-runModel = function(iterations = 100){
+runModel = function(iterations = 500){
 
    Meteor.call('play_game',{model : editor.getValue(), iterations: iterations}, function(err, res){
      if(err || !res){

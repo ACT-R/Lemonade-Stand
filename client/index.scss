@@ -108,3 +108,21 @@ html, body{
 
   overflow-y: scroll;
 }
+
+/* GETTING STARTED */
+#getting_started{
+  overflow-y:scroll;
+
+  .img_header{
+    display:block;
+    margin:0 auto;
+    max-height:200px;
+  }
+
+  iframe{
+    display: block;
+    width:90%;
+    height: 600px;
+    margin:0 auto;
+  }
+}
