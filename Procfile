@@ -1,1 +1,1 @@
-web: meteor
+web: npm run
