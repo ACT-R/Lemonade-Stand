@@ -317,22 +317,22 @@ playInteractive = function(){
           {
             name: purchase_quantity[0] + ' Lemons' + " - $"+purchase_cost[0],
             key: 'l',
-            value: 'l',
+            value: 'l'
           },
           {
             name: purchase_quantity[1] + ' Sugar Cubes' + " - $"+purchase_cost[1],
             key: 's',
-            value: 's',
+            value: 's'
           },
           {
             name: purchase_quantity[2] + ' Ice Cubes' + " - $"+purchase_cost[2],
             key: 'i',
-            value: 'i',
+            value: 'i'
           },
           {
             name: purchase_quantity[3] + ' Cups' + " - $"+purchase_cost[3],
             key: 'c',
-            value: 'c',
+            value: 'c'
           }
         ]
 

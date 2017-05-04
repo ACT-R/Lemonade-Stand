@@ -16,7 +16,9 @@
     "tests"
   ],
   "dependencies": {
-    "google-blockly": "*",
-    "ace-builds": "^1.2.6"
+    "ace-builds": "^1.2.6",
+    "xterm": "https://raw.githubusercontent.com/sourcelair/xterm.js/master/dist/xterm.css",
+    "google-blockly": "DerekTBrown/blockly",
+    "modernuiicons": "Templarian/WindowsIcons"
   }
 }

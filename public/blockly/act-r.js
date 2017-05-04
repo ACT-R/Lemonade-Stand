@@ -371,12 +371,81 @@ Blockly.Blocks['production'] = {
   }
 };
 
+// Helper Function for Creating Slot Conditions
+var create_slot_condition = function(comparison, key, value, connection){
+  var key_block = Blockly.getMainWorkspace().newBlock('symbol');
+  key_block.setFieldValue(key,"symbol");
+  key_block.initSvg();
+  key_block.render();
+
+  var value_block = Blockly.getMainWorkspace().newBlock('symbol');
+  value_block.setFieldValue(value,"symbol");
+  value_block.initSvg();
+  value_block.render();
+
+
+  var cond = Blockly.getMainWorkspace().newBlock('slot_condition');
+  cond.setFieldValue(comparison,"CMP");
+  cond.initSvg();
+  cond.render();
+
+  var slot = cond.getInput("slot").connection.targetConnection.sourceBlock_;
+
+  slot.getInput('slot_name').connection.connect(key_block.outputConnection);
+  slot.getInput('slot_value').connection.connect(value_block.outputConnection);
+  cond.getInput('slot').connection.connect(slot.outputConnection);
+
+  connection.connect(cond.previousConnection);
+}
+
 Blockly.Blocks['production_component'] = {
   init: function() {
     var thisBlock = this;
 
-    var image = new Blockly.FieldImage("https://www.gstatic.com/codesite/ph/images/triangle.gif", 15, 15, "*");
-    console.log(JSON.stringify(image));
+    /* "Magic" Generation Function */
+    var image = new Blockly.FieldImage("lib/modernuiicons/WindowsPhone/dark/appbar.camera.flash.selected.png", 17, 17, "*", function(){
+
+      // Verify not in Toolbox
+      if (Blockly.getMainWorkspace().id === thisBlock.workspace.id){
+
+        // Verify if existing slots should be deleted.
+        if(!"targetConnection" in thisBlock.getInput('slots').connection ||
+           thisBlock.getInput('slots').connection.targetConnection == null ||
+           confirm("WARNING!\nThis will delete all slots in this block.  Do you wish to do this?")
+          ){
+
+            switch(thisBlock.getFieldValue('buffer')){
+
+              case "goal":
+
+              case "visual":
+
+              case "imaginal":
+
+              case "motor":
+                switch (thisBlock.getFieldValue('type')){
+                   case "?":
+                     create_slot_condition("=","state","free",thisBlock.getInput('slots').connection);
+                     break;
+
+                   case "+":
+                     create_slot_condition("=","key","l",thisBlock.getInput('slots').connection);
+                     create_slot_condition("=","cmd","press-key",thisBlock.getInput('slots').connection);
+                     break;
+
+                   default:
+                     Alert("This is an atypical buffer request.");
+                     break;
+                }
+                break;
+
+              case "retrieval":
+
+            }
+
+        }
+      }
+    });
 
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["=","="], ["+","+"], ["*","*"], ["@","@"]]), "type")
@@ -452,7 +521,7 @@ Blockly.JavaScript['set_chunks'] = function(block) {
 };
 
 Blockly.JavaScript['production'] = function(block) {
-  var text_name = block.getFieldValue('name');
+  var text_name = block.getFieldValue('name').toString().replace(/ /g,"_");
   var text_desc = block.getFieldValue('desc');
   var num_utility = block.getFieldValue('utility');
   var statements_if = Blockly.JavaScript.statementToCode(block, 'IF');

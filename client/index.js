@@ -121,6 +121,7 @@ Template.ace.onRendered(function(){
   editor = ace.edit("ace_editor");
   editor.getSession().setMode("ace/mode/lisp");
   editor.setReadOnly(true);
+  editor.$blockScrolling = Infinity;
 });
 
 /**

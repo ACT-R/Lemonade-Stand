@@ -11,10 +11,6 @@
   // Import Lemonade Game
   var LemonadeGame = require('./game.js').game;
 
-  /* Create Databases */
-  lisp_output = new Meteor.Collection('lisp_output');
-  data_output = new Meteor.Collection('data_output');
-
   /**
    **  runModel
    **
