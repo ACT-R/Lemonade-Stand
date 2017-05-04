@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div class="terminal panel-bottom">
+      <div class="panel-bottom terminal">
         {{> lisp_output}}
       </div>
     </div>
@@ -281,13 +281,24 @@
 
 <!-- LISP_OUTPUT -->
 <template name="lisp_output">
+  {{#each getMessage}}
+    {{#if equals message "MODEL_NEW"}}
+      <p class="xterm-color-11">Model Running. Please wait.</p>
+    {{/if}}
+    {{#if equals message "MODEL_SUCCESS"}}
+      <p class="xterm-color-10">Model Success.</p>
+    {{/if}}
+    {{#if equals message "MODEL_FAILURE"}}
+      <p class="xterm-color-9">Model Failure.</p>
+    {{/if}}
+    {{#if equals message "SERVER_ERROR"}}
+      <p class="xterm-color-9">Server Error.  Contact derekbro -at- andrew.cmu.edu.</p>
+    {{/if}}
+  {{/each}}
+
   {{#if isActive}}
     {{#each getLines}}
       {{formatLine data}}
     {{/each}}
-  {{else}}
-    <div>
-      Play model to see output...
-    </div>
   {{/if}}
 </template>

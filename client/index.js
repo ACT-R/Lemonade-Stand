@@ -135,6 +135,20 @@ Template.ace.onRendered(function(){
 
  // Output Command Line
  Template.lisp_output.helpers({
+   equals(a,b){
+     return (a === b);
+   },
+   getMessage() {
+        return lisp_output.find({
+          $and:[
+            {terminal_id: Session.get('terminal_id')},
+            {terminal_id: {$exists: true}}
+          ],
+          message: {"$exists":true}
+        }, {
+          sort: {DateTime: -1, limit: 1}
+        });
+   },
    isActive() {
      return Session.get("terminal_id") != null;
    },

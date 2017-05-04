@@ -22,23 +22,24 @@
 
     // Create Terminal Record
      terminal_id = lisp_output.insert({"message" : "MODEL_NEW"});
+     lisp_output.insert({"message" : "MODEL_NEW", "terminal_id" : terminal_id});
 
     // Create Model File
     tmp.file({ postfix : ".lisp", detachDescriptor : true, keep : true }, Meteor.bindEnvironment(function(err, path_model, fd, cleanup) {
       if (err) {
-        lisp_output.insert({"message" : "FILE_ERROR"});
+        lisp_output.insert({"message" : "SERVER_ERROR", "terminal_id" :  terminal_id});
       }
 
       // Write Model to File
       fs.write(fd, model, Meteor.bindEnvironment(function(err){
         if (err) {
-          lisp_output.insert({"message" : "FILE_ERROR"});
+          lisp_output.insert({"message" : "SERVER_ERROR", "terminal_id" :  terminal_id});
           console.err(err);
         }
 
         fs.close(fd, Meteor.bindEnvironment(function(err){
           if (err) {
-            lisp_output.insert({"message" : "FILE_ERROR"});
+            lisp_output.insert({"message" : "SERVER_ERROR", "terminal_id" :  terminal_id});
             console.err(err);
           }
 
@@ -76,31 +77,31 @@
 
             // Send Lisp Command
             term = term.sendline(lisp_command)
-                        .expect(/"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig, Meteor.bindEnvironment(function(data){
+                        .wait(/"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig, Meteor.bindEnvironment(function(data){
 
-                          // Format Model Output
-                          var moves = [];
-                          re = /"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig;
-                          if((parse = re.exec(data)) != null){
-                            for(var i = 0; i < 4; i++){
-                                moves[i] = parse[i + 1] == 1;
+                            // Format Model Output
+                            re = /"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig;
+                            if((parse = re.exec(data)) != null){
+                              var moves = [];
+                              for(var i = 0; i < 4; i++){
+                                  moves[i] = parse[i + 1] == 1;
+                              }
+
+                              // Return Results of Model
+                              var move_string = `
+                              == DAY ${game.getDay()} ==
+                              SCORE: ${game.getScore()}
+                              WEATHER: ${game.getWeather().getTemp()} ${game.getWeather().getCond()}
+                              INVENTORY: L: ${game.getInventory().lemons} S: ${game.getInventory().sugar} I: ${game.getInventory().ice} C: ${game.getInventory().cups}
+
+                              MOVE: ${parse[1]} ${parse[2]} ${parse[3]} ${parse[4]}
+                              `;
+                              lisp_output.insert({"data" : move_string, "terminal_id" :  terminal_id});
+
+                              // Update Game State
+                              game.nextDay(moves);
                             }
-
-                            // Return Results of Model
-                            var move_string = `
-                            == DAY ${game.getDay()} ==
-                            SCORE: ${game.getScore()}
-                            WEATHER: ${game.getWeather().getTemp()} ${game.getWeather().getCond()}
-                            INVENTORY: L: ${game.getInventory().lemons} S: ${game.getInventory().sugar} I: ${game.getInventory().ice} C: ${game.getInventory().cups}
-
-                            MOVE: ${data}
-                            `;
-                            lisp_output.insert({"data" : move_string, "terminal_id" :  terminal_id});
-
-                            // Update Game State
-                            game.nextDay(moves);
-                          }
-                        }));
+                          }));
           }
 
           // Close ACT-R
@@ -122,8 +123,11 @@
 
                 // Failure Case
                 } else {
-
                   lisp_output.insert({"message" : "MODEL_FAILURE", "terminal_id" :  terminal_id});
+
+                  if(output != null){
+                    lisp_output.insert({"data" : output, "terminal_id" :  terminal_id});
+                  }
 
                 }
                   // Cleanup TMP File
