@@ -1,3 +1,12 @@
+/**
+ **   BLOCK CONFIGURATION
+ **/
+
+Blockly.BlockSvg.START_HAT = true;
+
+/**
+ **   BLOCK DEFINITIONS
+ **/
 
 Blockly.Blocks['variable'] = {
   init: function() {
@@ -36,7 +45,7 @@ Blockly.Blocks['slot'] = {
   }
 };
 
-Blockly.Blocks['define_chunk_type'] = {
+Blockly.Blocks['chunk_type'] = {
   /**
    * Block for creating a list with any number of elements of any type.
    * @this Blockly.Block
@@ -383,13 +392,14 @@ var create_slot_condition = function(comparison, key, value, connection){
   value_block.initSvg();
   value_block.render();
 
+  var slot = Blockly.getMainWorkspace().newBlock('slot');
+  slot.initSvg();
+  slot.render();
 
   var cond = Blockly.getMainWorkspace().newBlock('slot_condition');
   cond.setFieldValue(comparison,"CMP");
   cond.initSvg();
   cond.render();
-
-  var slot = cond.getInput("slot").connection.targetConnection.sourceBlock_;
 
   slot.getInput('slot_name').connection.connect(key_block.outputConnection);
   slot.getInput('slot_value').connection.connect(value_block.outputConnection);
@@ -414,13 +424,41 @@ Blockly.Blocks['production_component'] = {
            confirm("WARNING!\nThis will delete all slots in this block.  Do you wish to do this?")
           ){
 
+            // Delete Existing
+            if(thisBlock.getInput("slots").connection.targetConnection != null){
+              thisBlock.getInput("slots").connection.targetConnection.sourceBlock_.dispose();
+            }
+
             switch(thisBlock.getFieldValue('buffer')){
 
               case "goal":
+                switch (thisBlock.getFieldValue('type')){
+                   case "=":
+                     create_slot_condition("=","state","purchase",thisBlock.getInput('slots').connection);
+                     create_slot_condition("=","isa","game-state",thisBlock.getInput('slots').connection);
+                     break;
+                   default:
+                     Alert("This is an atypical buffer request.");
+                     break;
+                }
+                break;
 
               case "visual":
+                switch (thisBlock.getFieldValue('type')){
+                   case "?":
+                     create_slot_condition("=","state","free",thisBlock.getInput('slots').connection);
+                     break;
+                }
+                break;
 
               case "imaginal":
+                switch (thisBlock.getFieldValue('type')){
+                   case "?":
+                     create_slot_condition("=","state","free",thisBlock.getInput('slots').connection);
+                     break;
+                }
+                break;
+
 
               case "motor":
                 switch (thisBlock.getFieldValue('type')){
@@ -448,7 +486,7 @@ Blockly.Blocks['production_component'] = {
     });
 
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown([["=","="], ["+","+"], ["*","*"], ["@","@"]]), "type")
+        .appendField(new Blockly.FieldDropdown([["=","="], ["?","?"], ["+","+"], ["*","*"], ["@","@"]]), "type")
         .appendField(new Blockly.FieldDropdown([["goal","goal"], ["visual","visual"], ["imaginal","imaginal"], ["motor","motor"], ["retrieval","retrieval"]], function(newType){
             thisBlock._updateBuffer(newType);
         }), "buffer")
@@ -502,22 +540,22 @@ Blockly.Blocks['slot_condition'] = {
     this.setTooltip('');
     this.setHelpUrl('');
 
-    if(Blockly.getMainWorkspace().id === this.workspace.id){
-      var slot = Blockly.getMainWorkspace().newBlock('slot');
-      slot.initSvg();
-      slot.render();
-
-      this.getInput('slot').connection.connect(slot.outputConnection);
-    }
-
   }
 };
 
-Blockly.JavaScript['set_chunks'] = function(block) {
-  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-  // TODO: Assemble JavaScript into code variable.
-  var code = '...;\n';
-  return code;
+/**
+ **   CODE GENERATION
+ **/
+
+Blockly.JavaScript['chunk_type'] = function(block) {
+  var chunk_type_name = block.getFieldValue('chunk_type_name').toString().replace(/ /g,"_");
+
+  var code = "(chunk-type "+chunk_type_name+" ";
+  for(var i = 0; i < block.itemCount_; i++){
+    code += Blockly.JavaScript.valueToCode(block, 'ADD'+i, Blockly.JavaScript.ORDER_NONE)+" ";
+  }
+
+  return code + ") \n";
 };
 
 Blockly.JavaScript['production'] = function(block) {

@@ -43,14 +43,17 @@
           }
 
           // Create PTY
+          const timeout = 20;
+          const timeout_cmd = "/bin/timeout";
           const path_ccl = Assets.absoluteFilePath("bin/ccl/lx86cl64");
           fs.chmodSync(path_ccl, '755');
           const path_actr = Assets.absoluteFilePath("bin/actr7/load-act-r.lisp");
           fs.chmodSync(path_actr, '755');
 
           term = nexpect
-            .spawn(path_ccl, ["-l",path_actr,"-l",path_model])
+            .spawn(timeout_cmd, ["--signal=SIGINT",timeout,path_ccl,"-l",path_actr,"-l",path_model])
             .wait("######### Loading of ACT-R 7 is complete #########")
+            .expect("Welcome to Clozure Common Lisp Version 1.11-r16635  (LinuxX8664)!")
             .wait("?");
 
           // Run Game Simulation
@@ -73,7 +76,7 @@
 
             // Send Lisp Command
             term = term.sendline(lisp_command)
-                        .wait(/"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig, Meteor.bindEnvironment(function(data){
+                        .expect(/"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig, Meteor.bindEnvironment(function(data){
 
                           // Format Model Output
                           var moves = [];
@@ -104,19 +107,27 @@
           term.sendline("(quit)")
               .run(Meteor.bindEnvironment(function(err, output, exit){
 
-                // Return Model Message
-                if (!err) {
-                  lisp_output.insert({"message" : "MODEL_SUCCESS", "terminal_id" :  terminal_id});
-                }
-                else {
+                // Success Case
+                if(exit ==  0){
+                  // Return Model Message
+                  if (!err) {
+                    lisp_output.insert({"message" : "MODEL_SUCCESS", "terminal_id" :  terminal_id});
+                  }
+                  else {
+                    lisp_output.insert({"message" : "MODEL_FAILURE", "terminal_id" :  terminal_id});
+                  }
+
+                  // Return Model Data
+                  data_output.insert({"data" : game.getScoreSeries(), "terminal_id" : terminal_id});
+
+                // Failure Case
+                } else {
+
                   lisp_output.insert({"message" : "MODEL_FAILURE", "terminal_id" :  terminal_id});
+
                 }
-
-                // Return Model Data
-                data_output.insert({"data" : game.getScoreSeries(), "terminal_id" : terminal_id});
-
-                // Cleanup TMP File
-                cleanup();
+                  // Cleanup TMP File
+                  cleanup();
               }));
 
         }));

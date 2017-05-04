@@ -7,7 +7,7 @@
     "preinstall": "npm run preinstall-bower && npm run preinstall-ccl && npm run preinstall-actr",
     "preinstall-ccl": "mkdir -p private/bin && wget -qO- ftp://ftp.clozure.com/pub/release/1.11/ccl-1.11-linuxx86.tar.gz | tar xzf - -C private/bin/;",
     "preinstall-actr": "wget -qO- -O private/bin/actr.zip http://act-r.psy.cmu.edu/wordpress/wp-content/themes/ACT-R/actr7/actr7.zip && unzip private/bin/actr.zip -d private/bin",
-    "preinstall-bower":"npm install -g bower;",
+    "preinstall-bower": "npm install -g bower;",
     "postinstall": "bower install;"
   },
   "repository": {
@@ -17,7 +17,7 @@
   "dependencies": {
     "babel-runtime": "6.18.0",
     "meteor-node-stubs": "~0.2.0",
-    "nexpect": "^0.5.0",
+    "nexpect": "github:DerekTBrown/nexpect",
     "node-pty": "^0.6.3",
     "tmp": "0.0.31"
   },
