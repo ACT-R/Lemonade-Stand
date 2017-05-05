@@ -13,7 +13,6 @@
 
   /**
    **  runModel
-   **
    **/
   var runModel = function(obj){
     // Parse Obj
@@ -44,7 +43,7 @@
           }
 
           // Create PTY
-          const timeout = 20;
+          const timeout = 10;
           const timeout_cmd = "/bin/timeout";
           const path_ccl = Assets.absoluteFilePath("bin/ccl/lx86cl64");
           fs.chmodSync(path_ccl, '755');
@@ -52,7 +51,7 @@
           fs.chmodSync(path_actr, '755');
 
           term = nexpect
-            .spawn(timeout_cmd, ["--signal=SIGINT",timeout,path_ccl,"-l",path_actr,"-l",path_model])
+            .spawn(timeout_cmd, ["--signal=SIGTERM",timeout,path_ccl,"-l",path_actr,"-l",path_model])
             .wait("######### Loading of ACT-R 7 is complete #########")
             .expect("Welcome to Clozure Common Lisp Version 1.11-r16635  (LinuxX8664)!")
             .wait("?");
@@ -120,6 +119,14 @@
 
                   // Return Model Data
                   data_output.insert({"data" : game.getScoreSeries(), "terminal_id" : terminal_id});
+
+                // Timeout Case
+                } else if(exit == 124){
+                  lisp_output.insert({"message" : "MODEL_TIMEOUT", "terminal_id" :  terminal_id});
+
+                  if(output != null){
+                    lisp_output.insert({"data" : output, "terminal_id" :  terminal_id});
+                  }
 
                 // Failure Case
                 } else {
