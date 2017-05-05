@@ -75,17 +75,31 @@ Template.blockly.onRendered(function() {
   var onModify = function(event){
 
     // Regenerate the Code
-    var code = "";
+    var chunk_types = "", chunks = "", productions = "";
     var blocks = workspace.getTopBlocks(true);
     for(var i = 0; i < blocks.length; i++){
-      code += Blockly.JavaScript.blockToCode(blocks[i]);
+      switch (blocks[i].type){
+          case "chunk_type":
+            chunk_types += Blockly.JavaScript.blockToCode(blocks[i]);
+            break;
+          case "chunk":
+            chunks += Blockly.JavaScript.blockToCode(blocks[i]);
+            break;
+          case "productions":
+            productions += Blockly.JavaScript.blockToCode(blocks[i]);
+            break;
+          default:
+            return;
+      }
     }
+
+    // Construct Code
+    var code = chunk_types + "\n (define-chunks " + chunks + ")\n" + productions;
 
     // Place Inside Tags
     old_code = editor.getValue();
     editor.setValue(old_code.replace(/;;BEGIN-MODEL[\s\S]*?;;END-MODEL/g,
     ";;BEGIN-MODEL\n" + code + "\n  ;;END-MODEL"));
-
 
   }
   workspace.addChangeListener(onModify);
@@ -198,6 +212,29 @@ Template.ace.onRendered(function(){
 **/
 runModel = function(iterations = 500){
 
+
+  // Validate Workspace
+  var blocks = workspace.getTopBlocks(true), invalid_tlb = false;
+  for(var i = 0; i < blocks.length; i++){
+    console.log(blocks[i]);
+
+    switch (blocks[i].type){
+        case "chunk_type":
+        case "chunk":
+        case "productions":
+          break;
+        default:
+          invalid_tlb = true;
+          break;
+    }
+  }
+
+  if(invalid_tlb){
+    alert("You have invalid top-level blocks in your workspace.  Only chunk types, chunks and productions are allowed in the workspace.");
+    return;
+  }
+
+  // Call Meteor Method
    Meteor.call('play_game',{model : editor.getValue(), iterations: iterations}, function(err, res){
      if(err || !res){
        console.log(res);

@@ -547,6 +547,17 @@ Blockly.Blocks['slot_condition'] = {
  **   CODE GENERATION
  **/
 
+ Blockly.JavaScript['chunk'] = function(block) {
+   var chunk_name = block.getFieldValue('chunk_name').toString().replace(/ /g,"_");
+
+   var code = "\t\t(" + chunk_name;
+   for(var i = 0; i < block.itemCount_; i++){
+     code += Blockly.JavaScript.valueToCode(block, 'ADD'+i, Blockly.Javascript.ORDER_NONE)+" ";
+   }
+
+   return code + ") \n";
+ };
+
 Blockly.JavaScript['chunk_type'] = function(block) {
   var chunk_type_name = block.getFieldValue('chunk_type_name').toString().replace(/ /g,"_");
 
