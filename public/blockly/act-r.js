@@ -456,9 +456,15 @@ Blockly.Blocks['production_component'] = {
                    case "?":
                      create_slot_condition("=","state","free",thisBlock.getInput('slots').connection);
                      break;
+                   case "+":
+                     break;
+                   case "@":
+                     break;
+                   default:
+                     Alert("This is an atypical buffer request.");
+                     break;
                 }
                 break;
-
 
               case "motor":
                 switch (thisBlock.getFieldValue('type')){
@@ -513,6 +519,9 @@ Blockly.Blocks['production_component'] = {
          this.setColour(290);
          break;
        case "visual":
+         this.setColour(120);
+         break;
+       case "visual-location":
          this.setColour(120);
          break;
        case "retrieval":

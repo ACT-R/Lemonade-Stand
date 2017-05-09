@@ -43,7 +43,7 @@
           }
 
           // Create PTY
-          const timeout = 10;
+          const timeout = 20;
           const timeout_cmd = "/bin/timeout";
           const path_ccl = Assets.absoluteFilePath("bin/ccl/lx86cl64");
           fs.chmodSync(path_ccl, '755');
@@ -58,24 +58,14 @@
 
           // Run Game Simulation
           var game = new LemonadeGame();
+          var lisp_command = function(){
+            return `(learn-stage ${game.getScore()})\n(purchase-stage '(${game.getWeather().getTemp()} ${game.getWeather().getCond()}) '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups}))`
+          }
 
           for(var i = 1; i <= iterations; i++){
-            // Generate Lisp Command
-            var lisp_command =
-                    `(learn-stage ${game.getScore()})
-                     (purchase-stage
-                          '(${game.getWeather().getTemp()}
-                            ${game.getWeather().getCond()}
-                           )
-                          '(${game.getInventory().lemons}
-                            ${game.getInventory().sugar}
-                            ${game.getInventory().ice}
-                            ${game.getInventory().cups}
-                           )
-                    )`
 
             // Send Lisp Command
-            term = term.sendline(lisp_command)
+            term = term.sendline(lisp_command())
                         .wait(/"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig, Meteor.bindEnvironment(function(data){
 
                             // Format Model Output

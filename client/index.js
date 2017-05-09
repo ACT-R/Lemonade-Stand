@@ -181,19 +181,27 @@ Template.ace.onRendered(function(){
 /**
  **  Load Model Dropdown
  **/
- loadModel = function(url){
+ loadModel = function(xml_url, lisp_url){
    var r = confirm("WARNING!\nThis will discard any work you have in progress.  Do you really wish to load a new model?");
    if(r){
-     $.get(url, function(data){
+
+     // Get Blocks
+     $.get(xml_url, function(data){
        workspace.clear();
        var xml = Blockly.Xml.textToDom(data);
        Blockly.Xml.domToWorkspace(workspace, xml);
      },"text");
+
+     // Get Lisp
+     $.get(lisp_url, function(data){
+       editor.setValue(data);
+     },"text");
+
    }
  }
  $(document).ready(function(){
    $(".tabs .load #load_model").change(function(){
-     loadModel(this.value);
+     loadModel($('option:selected', this).attr('xml'), $('option:selected', this).attr('lisp'));
    })
  })
 
@@ -210,8 +218,7 @@ Template.ace.onRendered(function(){
 /**
 **  Run Model Function
 **/
-runModel = function(iterations = 500){
-
+runModel = function(iterations = 250){
 
   // Validate Workspace
   var blocks = workspace.getTopBlocks(true), invalid_tlb = false;

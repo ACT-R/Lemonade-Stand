@@ -39,122 +39,62 @@
     ;; Create Goal Focus
     (declare-buffer-usage goal game-state :all)
 
-    ;;
-    ;; PURCHASE STAGE
-    ;;
-    (p should-buy
+    ;; Example Key Press
+    (p test-keypress-l
      =goal>
        isa game-purchase
        state purchase
-    ==>
-     =goal>
-       state purchase-l
-       buy true
-    )
-
-    (p purchase-l
-     =goal>
-       isa game-purchase
-       state purchase-l
-       buy true
-       < inventory_lemons 50
      ?manual>
        state free
     ==>
      =goal>
-       state purchase-s
+       state purchase-l
      +manual>
        cmd press-key
        key "l"
       )
 
-    (p no-purchase-l
-     =goal>
-       isa game-purchase
-       state purchase-l
-       buy true
-       >= inventory_lemons 50
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-s
-      )
-
-    (p purchase-s
-     =goal>
-       isa game-purchase
-       state purchase-s
-       buy true
-       < inventory_sugar 25
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-i
-     +manual>
-       cmd press-key
-       key "s"
-      )
-
-    (p no-purchase-s
-     =goal>
-       isa game-purchase
-       state purchase-s
-       buy true
-       >= inventory_sugar 25
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-i
-      )
-
-    (p purchase-i
-     =goal>
-       isa game-purchase
-       state purchase-i
-       buy true
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-c
-     +manual>
-       cmd press-key
-       key "i"
-      )
-
-    (p purchase-c
-     =goal>
-       isa game-purchase
-       state purchase-c
-       buy true
-      < inventory_cups 100
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state nil
-       buy nil
-     +manual>
-       cmd press-key
-       key "c"
-      )
-
-      (p no-purchase-c
+      (p test-keypress-s
        =goal>
          isa game-purchase
-         state purchase-c
-         buy true
-        >= inventory_cups 100
+         state purchase-l
+       ?manual>
+         state free
       ==>
        =goal>
-         state nil
-         buy nil
+         state purchase-s
+       +manual>
+         cmd press-key
+         key "s"
         )
 
+      (p test-keypress-i
+       =goal>
+         isa game-purchase
+         state purchase-s
+       ?manual>
+         state free
+      ==>
+       =goal>
+         state purchase-i
+       +manual>
+         cmd press-key
+         key "i"
+        )
 
+        (p test-keypress-c
+         =goal>
+           isa game-purchase
+           state purchase-i
+         ?manual>
+           state free
+        ==>
+         =goal>
+           state nil
+         +manual>
+           cmd press-key
+           key "c"
+          )
 
   )
   ;;END-MODEL

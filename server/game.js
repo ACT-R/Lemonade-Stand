@@ -204,7 +204,7 @@ class GameState{
            this.getInventory().toString() + "\n\n"+
            "Weather: \n" + this.getWeather().toString() + "\n\n"+
            "Score: \n" + "$" + this.getScore().toString() + "\n";
-  }
+  };
 
   getDay(){
     return this.inventory.length;
