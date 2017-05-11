@@ -218,7 +218,7 @@ Template.ace.onRendered(function(){
 /**
 **  Run Model Function
 **/
-runModel = function(iterations = 250){
+runModel = function(iterations = 100){
 
   // Validate Workspace
   var blocks = workspace.getTopBlocks(true), invalid_tlb = false;

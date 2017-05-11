@@ -58,14 +58,14 @@
 
           // Run Game Simulation
           var game = new LemonadeGame();
-          var lisp_command = function(){
-            return `(learn-stage ${game.getScore()})\n(purchase-stage '(${game.getWeather().getTemp()} ${game.getWeather().getCond()}) '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups}))`
+          var lisp_command = function(data, term){
+            return `(learn-stage ${game.getScore()})(purchase-stage '("${game.getWeather().getTemp()}" ${game.getWeather().getCond()}) '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups}))`
           }
 
           for(var i = 1; i <= iterations; i++){
 
             // Send Lisp Command
-            term = term.sendline(lisp_command())
+            term = term.sendline(lisp_command)
                         .wait(/"([0-1]), ([0-1]), ([0-1]), ([0-1])"/ig, Meteor.bindEnvironment(function(data){
 
                             // Format Model Output
@@ -90,7 +90,8 @@
                               // Update Game State
                               game.nextDay(moves);
                             }
-                          }));
+                          }))
+                          .expect("?");
           }
 
           // Close ACT-R

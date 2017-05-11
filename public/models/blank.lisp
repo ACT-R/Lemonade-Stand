@@ -121,7 +121,7 @@
     (let ((window (open-exp-window "Purchase Phase" :visible nil)))
 
         (install-device window)
-        (setf *response* '("0" "0" "0" "0"))
+        (setq *response* (list "0" "0" "0" "0"))
 
         ;; Add Weather to Outside
         (add-text-to-exp-window :window "Purchase Phase" :x 50 :y 50 :text (nth 0 weather))
