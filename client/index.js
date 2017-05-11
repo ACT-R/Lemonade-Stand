@@ -209,10 +209,22 @@ Template.ace.onRendered(function(){
  **  Save Model Function
  **/
  saveModel = function(){
+
+   // Create Zip File
+   var zip = new JSZip();
+
+   // Save Blockly XML
    var xml = Blockly.Xml.workspaceToDom(workspace);
    var content = Blockly.Xml.domToText(xml)
-   uriContent = "data:application/octet-stream," + encodeURIComponent(content);
-   newWindow = window.open(uriContent, 'lemonade_model.xml');
+   zip.file("lemonade.xml",content);
+
+   // Save Lisp Code
+   zip.file("lemonade.lisp",editor.getValue());
+
+   // Generate ZIP file
+  var content =  zip.generate({type:"blob"})
+  saveAs(content, "model.zip");
+
  }
 
 /**
