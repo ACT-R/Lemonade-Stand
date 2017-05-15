@@ -59,7 +59,7 @@
           // Run Game Simulation
           var game = new LemonadeGame();
           var lisp_command = function(data, term){
-            return `(learn-stage ${game.getScore()})(purchase-stage '("${game.getWeather().getTemp()}" ${game.getWeather().getCond()}) '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups}))`
+            return `(learn-stage ${game.getScore()})(purchase-stage '(${game.getWeather().getTemp()} "${game.getWeather().getCond()}") '(${game.getInventory().lemons} ${game.getInventory().sugar} ${game.getInventory().ice} ${game.getInventory().cups}))`
           }
 
           for(var i = 1; i <= iterations; i++){
@@ -89,6 +89,8 @@
 
                               // Update Game State
                               game.nextDay(moves);
+
+                              return;
                             }
                           }))
                           .expect("?");

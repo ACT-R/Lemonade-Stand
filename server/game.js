@@ -61,7 +61,7 @@ class WeatherReport{
           next_temp = 70 + (Math.random() * 32);
           break;
        case WeatherCondition.CLOUDY:
-          next_temp = 60 + (Math.random() * 25);
+          next_temp = 60 + (Math.random() * 26);
           break;
        case WeatherCondition.RAINY:
           next_temp = 40 + (Math.random() * 30);

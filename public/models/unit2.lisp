@@ -7,7 +7,6 @@
     (sgp :v nil)
     ;;BEGIN-MODEL
 
-
     ;;
     ;; GOAL BUFFER DEFINITION
     ;;
@@ -36,64 +35,124 @@
     ;; Create Goal Focus
     (declare-buffer-usage goal game-state :all)
 
-    ;; Example Key Press
-    (p test-keypress-l
+    ;;
+    ;; PURCHASE STAGE
+    ;;
+    (p should-buy
      =goal>
        isa game-purchase
        state purchase
+       >= weather_temperature 60
+    ==>
+     =goal>
+       state purchase-l
+       buy true
+    )
+
+    (p purchase-l
+     =goal>
+       isa game-purchase
+       state purchase-l
+       buy true
+       < inventory_lemons 50
      ?manual>
        state free
     ==>
      =goal>
-       state purchase-l
+       state purchase-s
      +manual>
        cmd press-key
        key "l"
       )
 
-      (p test-keypress-s
+    (p no-purchase-l
+     =goal>
+       isa game-purchase
+       state purchase-l
+       buy true
+       >= inventory_lemons 50
+     ?manual>
+       state free
+    ==>
+     =goal>
+       state purchase-s
+      )
+
+    (p purchase-s
+     =goal>
+       isa game-purchase
+       state purchase-s
+       buy true
+       < inventory_sugar 25
+     ?manual>
+       state free
+    ==>
+     =goal>
+       state purchase-i
+     +manual>
+       cmd press-key
+       key "s"
+      )
+
+    (p no-purchase-s
+     =goal>
+       isa game-purchase
+       state purchase-s
+       buy true
+       >= inventory_sugar 25
+     ?manual>
+       state free
+    ==>
+     =goal>
+       state purchase-i
+      )
+
+    (p purchase-i
+     =goal>
+       isa game-purchase
+       state purchase-i
+       buy true
+     ?manual>
+       state free
+    ==>
+     =goal>
+       state purchase-c
+     +manual>
+       cmd press-key
+       key "i"
+      )
+
+    (p purchase-c
+     =goal>
+       isa game-purchase
+       state purchase-c
+       buy true
+      < inventory_cups 100
+     ?manual>
+       state free
+    ==>
+     =goal>
+       state nil
+       buy nil
+     +manual>
+       cmd press-key
+       key "c"
+      )
+
+      (p no-purchase-c
        =goal>
          isa game-purchase
-         state purchase-l
-       ?manual>
-         state free
+         state purchase-c
+         buy true
+        >= inventory_cups 100
       ==>
        =goal>
-         state purchase-s
-       +manual>
-         cmd press-key
-         key "s"
+         state nil
+         buy nil
         )
 
-      (p test-keypress-i
-       =goal>
-         isa game-purchase
-         state purchase-s
-       ?manual>
-         state free
-      ==>
-       =goal>
-         state purchase-i
-       +manual>
-         cmd press-key
-         key "i"
-        )
 
-        (p test-keypress-c
-         =goal>
-           isa game-purchase
-           state purchase-i
-         ?manual>
-           state free
-        ==>
-         =goal>
-           state nil
-         +manual>
-           cmd press-key
-           key "c"
-          )
-
-    ;;END-MODEL
+  ;;END-MODEL
   )
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -121,12 +180,12 @@
         (setq *response* (list "0" "0" "0" "0"))
 
         ;; Add Weather to Outside
-        (add-text-to-exp-window :window "Purchase Phase" :x 50 :y 50 :text (nth 0 weather))
+        (add-text-to-exp-window :window "Purchase Phase" :x 50 :y 50 :text (nth 1 weather))
 
         ;; Construct Goal Buffer Contents
         (let ((purchase `(
             state purchase
-            weather_condition ,(nth 1 weather)
+            weather_temperature ,(nth 0 weather)
             inventory_lemons ,(nth 0 inventory)
             inventory_sugar ,(nth 1 inventory)
             inventory_ice ,(nth 2 inventory)

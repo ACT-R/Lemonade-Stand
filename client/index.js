@@ -85,7 +85,7 @@ Template.blockly.onRendered(function() {
           case "chunk":
             chunks += Blockly.JavaScript.blockToCode(blocks[i]);
             break;
-          case "productions":
+          case "production":
             productions += Blockly.JavaScript.blockToCode(blocks[i]);
             break;
           default:
@@ -200,6 +200,11 @@ Template.ace.onRendered(function(){
    }
  }
  $(document).ready(function(){
+
+   // Load Blank File
+   loadModel("models/blank.xml","models/blank.lisp");
+
+   // Set Tab Loader Function
    $(".tabs .load #load_model").change(function(){
      loadModel($('option:selected', this).attr('xml'), $('option:selected', this).attr('lisp'));
    })

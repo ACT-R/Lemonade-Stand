@@ -559,12 +559,13 @@ Blockly.Blocks['slot_condition'] = {
  Blockly.JavaScript['chunk'] = function(block) {
    var chunk_name = block.getFieldValue('chunk_name').toString().replace(/ /g,"_");
 
-   var code = "\t\t(" + chunk_name;
+   var code = "\t\t(" + chunk_name +" ";
    for(var i = 0; i < block.itemCount_; i++){
-     code += Blockly.JavaScript.valueToCode(block, 'ADD'+i, Blockly.Javascript.ORDER_NONE)+" ";
+     if(block.getInput('ADD'+i).connection.targetConnection != null)
+      code += (Blockly.JavaScript.blockToCode(block.getInput('ADD'+i).connection.targetConnection.sourceBlock_));
    }
 
-   return code + ") \n";
+   return code + ")";
  };
 
 Blockly.JavaScript['chunk_type'] = function(block) {
@@ -599,7 +600,7 @@ Blockly.JavaScript['production_component'] = function(block) {
 
 Blockly.JavaScript['slot_condition'] = function(block) {
   var dropdown_cmp = block.getFieldValue('CMP');
-  var slot_code = Blockly.JavaScript.valueToCode(block, 'slot', Blockly.JavaScript.ORDER_ATOMIC);
+  var slot_code = Blockly.JavaScript.valueToCode(block, 'slot', Blockly.JavaScript.ORDER_NONE);
 
   if(dropdown_cmp === "="){
     return slot_code;
@@ -609,9 +610,9 @@ Blockly.JavaScript['slot_condition'] = function(block) {
 };
 
 Blockly.JavaScript['slot'] = function(block){
-  var value_slot_name = Blockly.JavaScript.valueToCode(block, 'slot_name', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_slot_value = Blockly.JavaScript.valueToCode(block, 'slot_value', Blockly.JavaScript.ORDER_ATOMIC);
-  return value_slot_name + " " + value_slot_value + "\n";
+  var value_slot_name = Blockly.JavaScript.valueToCode(block, 'slot_name', Blockly.JavaScript.ORDER_NONE);
+  var value_slot_value = Blockly.JavaScript.valueToCode(block, 'slot_value', Blockly.JavaScript.ORDER_NONE);
+  return value_slot_name + " " + value_slot_value;
 }
 
 Blockly.JavaScript['variable'] = function(block) {

@@ -1,163 +1,70 @@
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;      YOUR MODEL     ;;
   ;;;;;;;;;;;;;;;;;;;;;;;;;
 
-  ;;BEGIN-MODEL
   (define-model lemonade
-
-    ;;
-    ;; SET PARAMETERS
-    ;;
     (sgp :v nil)
 
-    ;;
-    ;; GOAL BUFFER DEFINITION
-    ;;
+    ;;BEGIN-MODEL
 
-    ;; Abstract Game State Type
-    (chunk-type game-state state)
-    (define-chunks (purchase isa chunk) (learn isa chunk))
-
-    ;; Purchase Stage Type
-    (chunk-type (game-purchase (:include game-state))
-      (state purchase)
-      weather_temperature
-      weather_condition
-      inventory_lemons
-      inventory_sugar
-      inventory_ice
-      inventory_cups
-    )
-
-    ;; Learn Stage Type
-    (chunk-type (game-learn (:include game-state))
-      (state learn)
-      score
-    )
-
-    ;; Create Goal Focus
-    (declare-buffer-usage goal game-state :all)
-
-    ;;
-    ;; PURCHASE STAGE
-    ;;
-    (p should-buy
-     =goal>
-       isa game-purchase
-       state purchase
-    ==>
-     =goal>
-       state purchase-l
-       buy true
-    )
-
-    (p purchase-l
-     =goal>
-       isa game-purchase
-       state purchase-l
-       buy true
-       < inventory_lemons 50
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-s
-     +manual>
-       cmd press-key
-       key "l"
-      )
-
-    (p no-purchase-l
-     =goal>
-       isa game-purchase
-       state purchase-l
-       buy true
-       >= inventory_lemons 50
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-s
-      )
-
-    (p purchase-s
-     =goal>
-       isa game-purchase
-       state purchase-s
-       buy true
-       < inventory_sugar 25
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-i
-     +manual>
-       cmd press-key
-       key "s"
-      )
-
-    (p no-purchase-s
-     =goal>
-       isa game-purchase
-       state purchase-s
-       buy true
-       >= inventory_sugar 25
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-i
-      )
-
-    (p purchase-i
-     =goal>
-       isa game-purchase
-       state purchase-i
-       buy true
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state purchase-c
-     +manual>
-       cmd press-key
-       key "i"
-      )
-
-    (p purchase-c
-     =goal>
-       isa game-purchase
-       state purchase-c
-       buy true
-      < inventory_cups 100
-     ?manual>
-       state free
-    ==>
-     =goal>
-       state nil
-       buy nil
-     +manual>
-       cmd press-key
-       key "c"
-      )
-
-      (p no-purchase-c
+    (p test-keypress-l
        =goal>
          isa game-purchase
-         state purchase-c
-         buy true
-        >= inventory_cups 100
+         state purchase
+       ?manual>
+         state free
+      ==>
+       =goal>
+         state purchase-l
+       +manual>
+         cmd press-key
+         key "l"
+      )
+
+      (p test-keypress-s
+       =goal>
+         isa game-purchase
+         state purchase-l
+       ?manual>
+         state free
+      ==>
+       =goal>
+         state purchase-s
+       +manual>
+         cmd press-key
+         key "s"
+      )
+
+      (p test-keypress-i
+       =goal>
+         isa game-purchase
+         state purchase-s
+       ?manual>
+         state free
+      ==>
+       =goal>
+         state purchase-i
+       +manual>
+         cmd press-key
+         key "i"
+      )
+
+      (p test-keypress-c
+       =goal>
+         isa game-purchase
+         state purchase-i
+       ?manual>
+         state free
       ==>
        =goal>
          state nil
-         buy nil
-        )
+       +manual>
+         cmd press-key
+         key "c"
+      )
 
-
-
-  )
   ;;END-MODEL
+  )
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;;   PURCHASE FUNCTION   ;;
@@ -184,12 +91,12 @@
         (setq *response* (list "0" "0" "0" "0"))
 
         ;; Add Weather to Outside
-        (add-text-to-exp-window :window "Purchase Phase" :x 50 :y 50 :text (nth 0 weather))
+        (add-text-to-exp-window :window "Purchase Phase" :x 50 :y 50 :text (nth 1 weather))
 
         ;; Construct Goal Buffer Contents
         (let ((purchase `(
             state purchase
-            weather_condition ,(nth 1 weather)
+            weather_temperature ,(nth 0 weather)
             inventory_lemons ,(nth 0 inventory)
             inventory_sugar ,(nth 1 inventory)
             inventory_ice ,(nth 2 inventory)
