@@ -194,6 +194,7 @@
 
         ;; Add Weather to Outside
         (add-text-to-exp-window :window "Purchase Phase" :x 50 :y 50 :text (nth 1 weather))
+        (proc-display)
 
         ;; Construct Goal Buffer Contents
         (let ((purchase `(

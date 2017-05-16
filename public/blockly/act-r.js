@@ -458,7 +458,7 @@ Blockly.Blocks['production_component'] = {
 
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["=","="], ["?","?"], ["+","+"], ["*","*"], ["@","@"]]), "type")
-        .appendField(new Blockly.FieldDropdown([["goal","goal"], ["visual","visual"], ["imaginal","imaginal"], ["manual","manual"], ["retrieval","retrieval"]], function(newType){
+        .appendField(new Blockly.FieldDropdown([["goal","goal"], ["visual","visual"], ["visual-location","visual-location"], ["imaginal","imaginal"], ["manual","manual"], ["retrieval","retrieval"]], function(newType){
             thisBlock._updateBuffer(newType);
         }), "buffer")
         .appendField(image);
