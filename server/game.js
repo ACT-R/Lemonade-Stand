@@ -222,6 +222,14 @@ class GameState{
     return this.score[this.score.length - 1];
   }
 
+  getScoreDiff(){
+    if(this.score.length == 1){
+      return this.score[this.score.length - 1];
+    } else {
+      return (this.score[this.score.length - 1] - this.score[this.score.length - 2]);
+    }
+  }
+
   getScoreSeries(){
     return this.score;
   }

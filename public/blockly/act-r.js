@@ -466,7 +466,7 @@ Blockly.Blocks['production_component'] = {
                 }
                 break;
 
-              case "motor":
+              case "manual":
                 switch (thisBlock.getFieldValue('type')){
                    case "?":
                      create_slot_condition("=","state","free",thisBlock.getInput('slots').connection);
@@ -493,7 +493,7 @@ Blockly.Blocks['production_component'] = {
 
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([["=","="], ["?","?"], ["+","+"], ["*","*"], ["@","@"]]), "type")
-        .appendField(new Blockly.FieldDropdown([["goal","goal"], ["visual","visual"], ["imaginal","imaginal"], ["motor","motor"], ["retrieval","retrieval"]], function(newType){
+        .appendField(new Blockly.FieldDropdown([["goal","goal"], ["visual","visual"], ["imaginal","imaginal"], ["manual","manual"], ["retrieval","retrieval"]], function(newType){
             thisBlock._updateBuffer(newType);
         }), "buffer")
         .appendField(image);
@@ -530,7 +530,7 @@ Blockly.Blocks['production_component'] = {
        case "imaginal":
          this.setColour(65);
          break;
-       case "motor":
+       case "manual":
          this.setColour(330);
          break;
      }
@@ -586,7 +586,7 @@ Blockly.JavaScript['production'] = function(block) {
   var statements_if = Blockly.JavaScript.statementToCode(block, 'IF');
   var statements_then = Blockly.JavaScript.statementToCode(block, 'THEN');
 
-  return "(p "+ text_name + " \"" + text_desc + "\"\n" + statements_if + "==>\n" + statements_then + ")\n" +
+  return "(p "+ text_name + " \"" + text_desc + "\"\n" + statements_if + "\n==>\n" + statements_then + ")\n" +
          "(spp "+text_name+" :reward "+num_utility+")\n";
 };
 
@@ -601,6 +601,8 @@ Blockly.JavaScript['production_component'] = function(block) {
 Blockly.JavaScript['slot_condition'] = function(block) {
   var dropdown_cmp = block.getFieldValue('CMP');
   var slot_code = Blockly.JavaScript.valueToCode(block, 'slot', Blockly.JavaScript.ORDER_NONE);
+
+  console.log(slot_code);
 
   if(dropdown_cmp === "="){
     return slot_code;
