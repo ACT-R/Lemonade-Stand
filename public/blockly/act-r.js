@@ -57,17 +57,6 @@ Blockly.Blocks['chunk_type'] = {
     this.setColour(160);
     this.setHelpUrl("");
     this.setTooltip("");
-
-    if(Blockly.getMainWorkspace().id === this.workspace.id){
-      for(var i = 0; i < 3; i++){
-        var isaSymbol = Blockly.getMainWorkspace().newBlock('symbol');
-        isaSymbol.setFieldValue("slot_name_"+i,"symbol");
-        isaSymbol.initSvg();
-        isaSymbol.render();
-
-        this.getInput('ADD'+i).connection.connect(isaSymbol.outputConnection);
-      }
-    }
   },
   /**
    * Create XML to represent list inputs.
@@ -160,7 +149,8 @@ Blockly.Blocks['chunk_type'] = {
       this.removeInput('EMPTY');
     } else if (!this.itemCount_ && !this.getInput('EMPTY')) {
       this.appendDummyInput('EMPTY')
-          .appendField(new Blockly.FieldTextInput("Chunk_Type_Name"), "chunk_type_name");
+          .appendField(new Blockly.FieldTextInput("Chunk_Type_Name"), "chunk_type_name")
+
     }
     // Add new inputs.
     for (var i = 0; i < this.itemCount_; i++) {
@@ -192,31 +182,6 @@ Blockly.Blocks['chunk'] = {
     this.setColour(20);
     this.setHelpUrl("");
     this.setTooltip("");
-
-    // Init with ISA Slot
-    if(Blockly.getMainWorkspace().id === this.workspace.id){
-      var isaName = Blockly.getMainWorkspace().newBlock('symbol');
-      isaName.setFieldValue("ISA","symbol");
-      isaName.initSvg();
-      isaName.render();
-
-      var isaValue = Blockly.getMainWorkspace().newBlock('symbol');
-      isaValue.setFieldValue("Chunk_Type","symbol");
-      isaValue.initSvg();
-      isaValue.render();
-
-      var isaSlot = Blockly.getMainWorkspace().newBlock('slot');
-      isaSlot.initSvg();
-      isaSlot.render();
-
-      var isaSlotName = isaSlot.getInput('slot_name').connection;
-      isaSlotName.connect(isaName.outputConnection);
-      var isaSlotValue = isaSlot.getInput('slot_value').connection;
-      isaSlotValue.connect(isaValue.outputConnection);
-
-      this.getInput('ADD0').connection.connect(isaSlot.outputConnection);
-    }
-
 
   },
   /**

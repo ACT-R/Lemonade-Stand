@@ -181,9 +181,8 @@ Template.ace.onRendered(function(){
 /**
  **  Load Model Dropdown
  **/
- loadModel = function(xml_url, lisp_url){
-   var r = confirm("WARNING!\nThis will discard any work you have in progress.  Do you really wish to load a new model?");
-   if(r){
+ loadModel = function(xml_url, lisp_url, noprompt){
+   if(noprompt || confirm("WARNING!\nThis will discard any work you have in progress.  Do you really wish to load a new model?")){
 
      // Get Blocks
      $.get(xml_url, function(data){
@@ -202,7 +201,7 @@ Template.ace.onRendered(function(){
  $(document).ready(function(){
 
    // Load Blank File
-   loadModel("models/blank.xml","models/blank.lisp");
+   loadModel("models/blank.xml","models/blank.lisp", true);
 
    // Set Tab Loader Function
    $(".tabs .load #load_model").change(function(){
