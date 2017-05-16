@@ -562,7 +562,7 @@ Blockly.Blocks['slot_condition'] = {
    var code = "\t\t(" + chunk_name +" ";
    for(var i = 0; i < block.itemCount_; i++){
      if(block.getInput('ADD'+i).connection.targetConnection != null)
-      code += (Blockly.JavaScript.blockToCode(block.getInput('ADD'+i).connection.targetConnection.sourceBlock_));
+      code += Blockly.JavaScript.valueToCode(block, 'ADD'+i, Blockly.JavaScript.ORDER_NONE);
    }
 
    return code + ")";
@@ -595,34 +595,32 @@ Blockly.JavaScript['production_component'] = function(block) {
   var dropdown_buffer = block.getFieldValue('buffer');
   var statement_slots = Blockly.JavaScript.statementToCode(block, 'slots');
 
-  return dropdown_type + dropdown_buffer + ">\n" + statement_slots;
+  return dropdown_type + dropdown_buffer + ">\n" + statement_slots+"\n";
 };
 
 Blockly.JavaScript['slot_condition'] = function(block) {
   var dropdown_cmp = block.getFieldValue('CMP');
   var slot_code = Blockly.JavaScript.valueToCode(block, 'slot', Blockly.JavaScript.ORDER_NONE);
 
-  console.log(slot_code);
-
   if(dropdown_cmp === "="){
-    return slot_code;
+    return slot_code+"\n";
   } else {
-    return dropdown_cmp + " " + slot_code;
+    return dropdown_cmp + " " + slot_code+"\n";
   }
 };
 
 Blockly.JavaScript['slot'] = function(block){
   var value_slot_name = Blockly.JavaScript.valueToCode(block, 'slot_name', Blockly.JavaScript.ORDER_NONE);
   var value_slot_value = Blockly.JavaScript.valueToCode(block, 'slot_value', Blockly.JavaScript.ORDER_NONE);
-  return value_slot_name + " " + value_slot_value;
+  return [value_slot_name + " " + value_slot_value, Blockly.JavaScript.ORDER_NONE];
 }
 
 Blockly.JavaScript['variable'] = function(block) {
   var variable_name = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('variable_name'), Blockly.Variables.NAME_TYPE);
-  return ["="+variable_name, Blockly.JavaScript.ORDER_MEMBER];
+  return ["="+variable_name, Blockly.JavaScript.ORDER_NONE];
 };
 
 Blockly.JavaScript['symbol'] = function(block) {
   var text_value = block.getFieldValue('symbol');
-  return [text_value, Blockly.JavaScript.ORDER_IN];
+  return [text_value, Blockly.JavaScript.ORDER_NONE];
 };

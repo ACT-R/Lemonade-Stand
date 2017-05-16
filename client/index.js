@@ -235,7 +235,7 @@ Template.ace.onRendered(function(){
 /**
 **  Run Model Function
 **/
-runModel = function(iterations = 500){
+runModel = function(iterations = 100){
 
   // Validate Workspace
   var blocks = workspace.getTopBlocks(true), invalid_tlb = false;
@@ -245,7 +245,7 @@ runModel = function(iterations = 500){
     switch (blocks[i].type){
         case "chunk_type":
         case "chunk":
-        case "productions":
+        case "production":
           break;
         default:
           invalid_tlb = true;
